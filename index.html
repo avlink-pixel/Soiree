@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soirée Email Generator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #faf9f6; color: #2c2c2a; min-height: 100vh; }
+
+  header { background: #2c2c2a; color: #faf9f6; padding: 1.5rem 2rem; }
+  header h1 { font-size: 1.4rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; }
+  header p { font-size: 0.85rem; color: #b4b2a9; margin-top: 0.25rem; letter-spacing: 0.04em; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+  .section { background: white; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .section-title { font-size: 0.7rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.12em; color: #888780; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid #d3d1c7; }
+
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .field-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 0.35rem; }
+  .field.full { grid-column: 1 / -1; }
+  label { font-size: 0.75rem; color: #5f5e5a; letter-spacing: 0.05em; }
+  input, select { padding: 0.5rem 0.75rem; border: 0.5px solid #d3d1c7; border-radius: 4px; font-size: 0.9rem; font-family: Georgia, serif; background: white; color: #2c2c2a; width: 100%; }
+  input:focus, select:focus { outline: none; border-color: #888780; }
+
+  .student-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr 2fr; gap: 0.5rem; align-items: center; padding: 0.6rem 0; border-bottom: 0.5px solid #f1efe8; }
+  .student-row.header { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #888780; padding-bottom: 0.5rem; }
+  .student-row input { font-size: 0.85rem; padding: 0.4rem 0.6rem; }
+  .student-row .del-btn { background: none; border: none; color: #d3d1c7; cursor: pointer; font-size: 1.1rem; padding: 0.2rem 0.5rem; border-radius: 4px; }
+  .student-row .del-btn:hover { color: #e24b4a; background: #fcebeb; }
+
+  .add-btn { margin-top: 1rem; padding: 0.5rem 1rem; background: none; border: 0.5px solid #d3d1c7; border-radius: 4px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; color: #5f5e5a; cursor: pointer; font-family: Georgia, serif; }
+  .add-btn:hover { background: #f1efe8; border-color: #888780; }
+
+  .tabs { display: flex; gap: 0; border-bottom: 0.5px solid #d3d1c7; margin-bottom: 0; }
+  .tab { padding: 0.6rem 1.1rem; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: #888780; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; border-top: none; border-left: none; border-right: none; font-family: Georgia, serif; }
+  .tab.active { color: #2c2c2a; border-bottom: 2px solid #2c2c2a; }
+  .tab:hover:not(.active) { color: #5f5e5a; }
+
+  .email-panel { display: none; }
+  .email-panel.active { display: block; }
+
+  .email-box { background: #faf9f6; border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 1.5rem; font-size: 0.9rem; line-height: 1.8; white-space: pre-wrap; font-family: Georgia, serif; color: #2c2c2a; min-height: 200px; position: relative; }
+  .email-box .placeholder { color: #d3d1c7; font-style: italic; }
+
+  .copy-btn { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.75rem; padding: 0.5rem 1rem; background: #2c2c2a; border: none; border-radius: 4px; color: #faf9f6; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; font-family: Georgia, serif; }
+  .copy-btn:hover { background: #444441; }
+  .copy-btn.copied { background: #3b6d11; }
+
+  .student-emails { display: flex; flex-direction: column; gap: 1.5rem; }
+  .student-email-block { border: 0.5px solid #d3d1c7; border-radius: 6px; overflow: hidden; }
+  .student-email-header { background: #f1efe8; padding: 0.6rem 1rem; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: #5f5e5a; display: flex; justify-content: space-between; align-items: center; }
+  .student-email-header .copy-btn { margin: 0; padding: 0.3rem 0.75rem; font-size: 0.7rem; }
+  .student-email-body { padding: 1.25rem; font-size: 0.9rem; line-height: 1.8; white-space: pre-wrap; font-family: Georgia, serif; background: white; }
+
+  .incomplete-notice { background: #faeeda; border: 0.5px solid #ef9f27; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.8rem; color: #633806; margin-bottom: 1rem; }
+
+  .emails-section { background: white; border: 0.5px solid #d3d1c7; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; }
+  .emails-section .tabs { padding: 0 1.5rem; background: #f1efe8; }
+  .email-content { padding: 1.5rem; }
+
+  @media (max-width: 600px) {
+    .field-grid, .field-grid.three { grid-template-columns: 1fr; }
+    .student-row { grid-template-columns: 1fr 1fr; }
+    .student-row.header { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+    <div>
+      <h1>Soirée Email Generator</h1>
+      <p>Fill in the details below to generate your five template emails</p>
+    </div>
+    <div style="display:flex;gap:0.75rem;align-items:center;">
+      <span id="autosave-msg" style="font-size:0.75rem;color:#888780;letter-spacing:0.04em;"></span>
+      <label style="padding:0.5rem 1rem;background:none;border:0.5px solid #888780;border-radius:4px;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;color:#faf9f6;cursor:pointer;font-family:Georgia,serif;">
+        Load file
+        <input type="file" accept=".json" id="loadInput" style="display:none;" onchange="loadFromFile(event)">
+      </label>
+      <button onclick="saveToFile()" style="padding:0.5rem 1rem;background:#faf9f6;border:none;border-radius:4px;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;color:#2c2c2a;cursor:pointer;font-family:Georgia,serif;">Save file</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-title">Event details</div>
+    <div class="field-grid three">
+      <div class="field">
+        <label>Performance week number</label>
+        <input type="number" id="perfWeek" placeholder="e.g. 10" min="1" max="20" oninput="updateAll()">
+      </div>
+      <div class="field">
+        <label>Day and date of performance</label>
+        <input type="text" id="perfDate" placeholder="e.g. Wednesday 24th June" oninput="updateAll()">
+      </div>
+      <div class="field">
+        <label>Form due date</label>
+        <input type="text" id="dueDate" placeholder="e.g. Monday 15th June" oninput="updateAll()">
+      </div>
+    </div>
+    <div class="field-grid" style="margin-top:1rem;">
+      <div class="field">
+        <label>Google Forms link</label>
+        <input type="text" id="formsLink" placeholder="https://forms.gle/..." oninput="updateAll()">
+      </div>
+      <div class="field">
+        <label>Your name (sign-off)</label>
+        <input type="text" id="yourName" placeholder="e.g. Aaron" oninput="updateAll()">
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Students performing</div>
+    <div class="student-row header">
+      <span>Student name</span>
+      <span>Class</span>
+      <span>Instrument</span>
+      <span>Piece</span>
+      <span>Parent name &amp; teacher</span>
+      <span></span>
+    </div>
+    <div id="studentList"></div>
+    <button class="add-btn" onclick="addStudent()">+ Add student</button>
+  </div>
+
+  <div class="emails-section">
+    <div class="tabs" id="emailTabs">
+      <button class="tab active" onclick="showEmail(0)">Email 1 – To: Instrumental Teachers</button>
+      <button class="tab" onclick="showEmail(1)">Email 2 – Invite to Parents</button>
+      <button class="tab" onclick="showEmail(2)">Email 3 – Parent Confirmation</button>
+      <button class="tab" onclick="showEmail(3)">Email 4 – Instrumental Teachers: Attending</button>
+      <button class="tab" onclick="showEmail(4)">Email 5 – All Staff Invitation</button>
+    </div>
+    <div class="email-content">
+
+      <div class="email-panel active" id="panel0">
+        <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Instrumental teachers</div>
+        <div class="email-box" id="email1"></div>
+        <button class="copy-btn" onclick="copyEmail('email1', this)">Copy email</button>
+      </div>
+
+      <div class="email-panel" id="panel1">
+        <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Parents — one email per student</div>
+        <div class="student-emails" id="email2"></div>
+      </div>
+
+      <div class="email-panel" id="panel2">
+        <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Parents (confirmed)</div>
+        <div class="email-box" id="email3"></div>
+        <button class="copy-btn" onclick="copyEmail('email3', this)">Copy email</button>
+      </div>
+
+      <div class="email-panel" id="panel3">
+        <div class="incomplete-notice">⚠ This email is incomplete — additional information regarding pay to be added once confirmed by principal.</div>
+        <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Instrumental teachers (attending)</div>
+        <div class="email-box" id="email4"></div>
+        <button class="copy-btn" onclick="copyEmail('email4', this)">Copy email</button>
+      </div>
+
+      <div class="email-panel" id="panel4">
+        <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: All staff</div>
+        <div class="email-box" id="email5"></div>
+        <button class="copy-btn" onclick="copyEmail('email5', this)">Copy email</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+let students = [];
+
+function addStudent() {
+  students.push({ name: '', cls: '', instrument: '', piece: '', parent: '', teacher: '' });
+  renderStudents();
+  updateAll();
+}
+
+function removeStudent(i) {
+  students.splice(i, 1);
+  renderStudents();
+  updateAll();
+}
+
+function renderStudents() {
+  const list = document.getElementById('studentList');
+  list.innerHTML = students.map((s, i) => `
+    <div class="student-row">
+      <input value="${s.name}" placeholder="Student name" oninput="students[${i}].name=this.value;updateAll()">
+      <input value="${s.cls}" placeholder="Class" oninput="students[${i}].cls=this.value;updateAll()">
+      <input value="${s.instrument}" placeholder="Instrument" oninput="students[${i}].instrument=this.value;updateAll()">
+      <input value="${s.piece}" placeholder="Piece" oninput="students[${i}].piece=this.value;updateAll()">
+      <input value="${s.parent}" placeholder="Parent | Teacher" oninput="students[${i}].parent=this.value;updateAll()" title="Format: Parent Name | Teacher Name">
+      <button class="del-btn" onclick="removeStudent(${i})">×</button>
+    </div>
+  `).join('');
+}
+
+function ph(val, label) {
+  return val && val.trim() ? val.trim() : `[${label}]`;
+}
+
+function getWeekLabel(base, offset) {
+  if (!base || isNaN(parseInt(base))) return offset === 0 ? '[Performance Week]' : `[Performance Week ${offset > 0 ? '+' : ''}${offset}]`;
+  const w = parseInt(base) + offset;
+  return `Week ${w}`;
+}
+
+function updateAll() {
+  autosave();
+  const perfWeek = document.getElementById('perfWeek').value;
+  const perfDate = document.getElementById('perfDate').value;
+  const dueDate = document.getElementById('dueDate').value;
+  const formsLink = document.getElementById('formsLink').value;
+  const yourName = document.getElementById('yourName').value;
+
+  const wPerf = getWeekLabel(perfWeek, 0);
+  const wMinus3 = getWeekLabel(perfWeek, -3);
+  const wMinus2 = getWeekLabel(perfWeek, -2);
+  const wMinus1 = getWeekLabel(perfWeek, -1);
+  const date = ph(perfDate, 'Day and Date');
+  const due = ph(dueDate, 'Due Date');
+  const link = formsLink.trim() || '[Google Forms Link]';
+  const sign = yourName.trim() ? `Kind regards,\n${yourName.trim()}` : 'Kind regards,';
+
+  // Email 1
+  document.getElementById('email1').innerText =
+`Subject: ${wPerf} Soirée – Timeline
+
+Hi everyone,
+
+We have an upcoming Soirée in ${wPerf} on ${date}. We are aiming to have at least 8 students perform, and ideally no more than 18 students in total.
+
+This Soirée is intended for students who are learning solo repertoire. As a result, it will be more focused on students learning piano and voice rather than students playing a concert band instrument who are currently working on ensemble repertoire.
+
+If you have band students who are also preparing a solo piece and you believe they will be able to perform it confidently by ${wPerf}, you are very welcome to include them.
+
+For all students invited to perform, we want this to be a positive experience. If a student is not yet confident with their current solo piece, please keep this in mind. We want to avoid students having a negative performance experience, as this can impact their confidence for future events.
+
+A note for Kelli and Rory: MCing our Soirées is part of the role of our student music leaders. Emily MC'd our first Soirée, so we would love to give Rory the opportunity this time if possible, though this may depend on where both students are at with their repertoire. We also feel it is only fair that whoever MCs has the chance to perform, so please let us know in your ${wMinus3} response whether either student has a solo piece ready.
+
+Please see the timeline below in preparation for the Soirée.
+
+${wMinus3} | Your action: Please reply all to this email by the end of this week with your recommendations, including:
+    • The student's name
+    • The piece they will be performing
+    • Their instrument
+
+    Replying all will allow all teachers to see which students are being recommended and keep track of overall numbers.
+
+${wMinus2} | Aaron: An invitation will be sent to the families of the recommended students with a sign up link to confirm participation.
+
+${wMinus1} | Aaron: Final confirmed list of students performing will be completed.
+
+${wPerf} | ${date} – Soirée performance.
+
+Please let me know if you have any questions.
+
+${sign}`;
+
+  // Email 2 — one per student
+  const email2Container = document.getElementById('email2');
+  if (students.length === 0) {
+    email2Container.innerHTML = '<div style="color:#b4b2a9;font-style:italic;font-size:0.9rem;padding:1rem 0;">Add students above to generate individual parent emails.</div>';
+  } else {
+    email2Container.innerHTML = students.map((s, i) => {
+      const sName = s.name || '[Student Name]';
+      const pName = s.parent || '[Parent Name]';
+      const instr = s.instrument || '[Instrument]';
+      const teacher = s.teacher || '[Teacher Name]';
+      const body =
+`Subject: Soirée Concert Sign-Up: Due ${due}
+
+Dear ${pName},
+
+${sName} has been recommended by their ${instr} teacher, ${teacher}, as ready to perform in our upcoming Soirée Concert, which will take place on ${date} at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
+
+If you would like ${sName} to take part, please complete the sign-up form linked below.
+
+Important information:
+
+  • To sign up for this event, all forms must be submitted before 11:59pm on ${due}.
+  • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
+  • Performers must stay for the full duration of the concert.
+  • Parents and family members are most welcome to attend and enjoy the performances.
+
+Please complete one form per student.
+
+Sign-up form:
+${link}
+
+${sign}`;
+
+      return `<div class="student-email-block">
+        <div class="student-email-header">
+          <span>${sName}${s.cls ? ' (' + s.cls + ')' : ''}</span>
+          <button class="copy-btn" onclick="copyText(\`${body.replace(/`/g,'\\`')}\`, this)">Copy</button>
+        </div>
+        <div class="student-email-body">${body}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Email 3
+  document.getElementById('email3').innerText =
+`Subject: Soirée Concert – Confirmation
+
+Dear Parents,
+
+This email is to confirm that we have received your response to the invitation for your child/ren to perform at the upcoming Soirée on ${date} from 3:45pm to 4:30pm.
+
+Thank you for responding, and we are very much looking forward to hearing the students perform.
+
+${sign}`;
+
+  // Email 4
+  let studentTable4 = '';
+  if (students.length > 0) {
+    studentTable4 = students.map(s =>
+      `  ${(s.name || '[Student Name]').padEnd(30)} ${(s.cls || '[Class]').padEnd(8)} ${(s.instrument || '[Instrument]').padEnd(20)} ${s.piece || '[Piece]'}`
+    ).join('\n');
+  } else {
+    studentTable4 = '  [Student Name]                  [Class]  [Instrument]         [Piece]';
+  }
+
+  document.getElementById('email4').innerText =
+`Subject: Soirée Concert – Performing Students
+
+Hi everyone,
+
+The following students will be performing at the Soirée on ${date}:
+
+  Student                          Class    Instrument           Piece
+  ─────────────────────────────────────────────────────────────────────
+${studentTable4}
+
+If the piece listed above differs from what your student is currently preparing, or if a piece has not yet been noted for your student, please let me know as soon as possible.
+
+Could you please also:
+
+  • Let me know if you will be able to attend
+  • Send me any backing tracks that students require as soon as possible
+
+${sign}`;
+
+  // Email 5
+  let studentTable5 = '';
+  if (students.length > 0) {
+    studentTable5 = students.map(s =>
+      `  ${(s.name || '[Student Name]').padEnd(30)} ${(s.cls || '[Class]').padEnd(8)} ${s.instrument || '[Instrument]'}`
+    ).join('\n');
+  } else {
+    studentTable5 = '  [Student Name]                  [Class]  [Instrument]';
+  }
+
+  document.getElementById('email5').innerText =
+`Subject: Soirée Concert – Staff Invitation
+
+Hi everyone,
+
+We would like to invite you to attend the upcoming Soirée on ${date} from 3:45pm to 4:30pm. The event will provide an opportunity for several students to share the music they have been learning in their instrumental and voice lessons.
+
+The following students will be performing:
+
+  Student                          Class    Instrument
+  ──────────────────────────────────────────────────────
+${studentTable5}
+
+I am sure the students would love to have your support.
+
+${sign}`;
+}
+
+function showEmail(index) {
+  document.querySelectorAll('.email-panel').forEach((p, i) => p.classList.toggle('active', i === index));
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
+}
+
+function copyEmail(id, btn) {
+  const text = document.getElementById(id).innerText;
+  copyText(text, btn);
+}
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerText;
+    btn.innerText = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerText = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function getFormData() {
+  return {
+    perfWeek: document.getElementById('perfWeek').value,
+    perfDate: document.getElementById('perfDate').value,
+    dueDate: document.getElementById('dueDate').value,
+    formsLink: document.getElementById('formsLink').value,
+    yourName: document.getElementById('yourName').value,
+    students: students
+  };
+}
+
+function applyFormData(data) {
+  document.getElementById('perfWeek').value = data.perfWeek || '';
+  document.getElementById('perfDate').value = data.perfDate || '';
+  document.getElementById('dueDate').value = data.dueDate || '';
+  document.getElementById('formsLink').value = data.formsLink || '';
+  document.getElementById('yourName').value = data.yourName || '';
+  students = data.students || [];
+  renderStudents();
+  updateAll();
+}
+
+let autosaveTimer;
+function autosave() {
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem('soiree_data', JSON.stringify(getFormData()));
+      const msg = document.getElementById('autosave-msg');
+      msg.innerText = 'Autosaved';
+      setTimeout(() => { msg.innerText = ''; }, 2000);
+    } catch(e) {}
+  }, 800);
+}
+
+function saveToFile() {
+  const data = getFormData();
+  const perfWeek = data.perfWeek ? `week${data.perfWeek}` : 'soiree';
+  const filename = `soiree_${perfWeek}.json`;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
+function loadFromFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      applyFormData(data);
+    } catch(err) {
+      alert('Could not read file. Please make sure it is a valid Soirée save file.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+document.querySelectorAll('input').forEach(el => {
+  el.addEventListener('input', autosave);
+});
+
+// init — load from localStorage if available
+const saved = localStorage.getItem('soiree_data');
+if (saved) {
+  try { applyFormData(JSON.parse(saved)); } catch(e) { renderStudents(); updateAll(); }
+} else {
+  renderStudents();
+  updateAll();
+}
+</script>
+</body>
+</html>
