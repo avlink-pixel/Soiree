@@ -97,12 +97,12 @@
         <input type="number" id="perfWeek" placeholder="e.g. 10" min="1" max="20" oninput="updateAll()">
       </div>
       <div class="field">
-        <label>Day and date of performance</label>
-        <input type="text" id="perfDate" placeholder="e.g. Wednesday 24th June" oninput="updateAll()">
+        <label>Date of performance</label>
+        <input type="date" id="perfDate" oninput="updateAll()">
       </div>
       <div class="field">
-        <label>Form due date</label>
-        <input type="text" id="dueDate" placeholder="e.g. Monday 15th June" oninput="updateAll()">
+        <label>Form due date (auto-calculated)</label>
+        <input type="text" id="dueDateDisplay" readonly style="background:#f1efe8;color:#888780;cursor:default;">
       </div>
     </div>
     <div class="field-grid" style="margin-top:1rem;">
@@ -215,20 +215,53 @@ function getWeekLabel(base, offset) {
   return `Week ${w}`;
 }
 
+function ordinal(n) {
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return n + (s[(v-20)%10] || s[v] || s[0]);
+}
+
+function formatDate(dateObj) {
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return `${days[dateObj.getDay()]} ${ordinal(dateObj.getDate())} ${months[dateObj.getMonth()]}`;
+}
+
+function getMondayBefore(dateObj) {
+  const d = new Date(dateObj);
+  const day = d.getDay();
+  const diff = day === 0 ? 6 : day - 1;
+  d.setDate(d.getDate() - 7 + (7 - diff) % 7 * -1);
+  const monday = new Date(dateObj);
+  monday.setDate(dateObj.getDate() - 7);
+  const mondayDay = monday.getDay();
+  const daysToMonday = mondayDay === 0 ? -6 : 1 - mondayDay;
+  monday.setDate(monday.getDate() + daysToMonday);
+  return monday;
+}
+
 function updateAll() {
   autosave();
   const perfWeek = document.getElementById('perfWeek').value;
-  const perfDate = document.getElementById('perfDate').value;
-  const dueDate = document.getElementById('dueDate').value;
+  const perfDateVal = document.getElementById('perfDate').value;
   const formsLink = document.getElementById('formsLink').value;
   const yourName = document.getElementById('yourName').value;
 
+  let date = '[Day and Date]';
+  let due = '[Due Date]';
+
+  if (perfDateVal) {
+    const perfDateObj = new Date(perfDateVal + 'T12:00:00');
+    date = formatDate(perfDateObj);
+    const mondayObj = getMondayBefore(perfDateObj);
+    due = formatDate(mondayObj);
+    document.getElementById('dueDateDisplay').value = due;
+  } else {
+    document.getElementById('dueDateDisplay').value = '';
+  }
   const wPerf = getWeekLabel(perfWeek, 0);
   const wMinus3 = getWeekLabel(perfWeek, -3);
   const wMinus2 = getWeekLabel(perfWeek, -2);
   const wMinus1 = getWeekLabel(perfWeek, -1);
-  const date = ph(perfDate, 'Day and Date');
-  const due = ph(dueDate, 'Due Date');
   const link = formsLink.trim() || '[Google Forms Link]';
   const sign = yourName.trim() ? `Kind regards,\n${yourName.trim()}` : 'Kind regards,';
 
@@ -403,7 +436,6 @@ function getFormData() {
   return {
     perfWeek: document.getElementById('perfWeek').value,
     perfDate: document.getElementById('perfDate').value,
-    dueDate: document.getElementById('dueDate').value,
     formsLink: document.getElementById('formsLink').value,
     yourName: document.getElementById('yourName').value,
     students: students
@@ -413,7 +445,6 @@ function getFormData() {
 function applyFormData(data) {
   document.getElementById('perfWeek').value = data.perfWeek || '';
   document.getElementById('perfDate').value = data.perfDate || '';
-  document.getElementById('dueDate').value = data.dueDate || '';
   document.getElementById('formsLink').value = data.formsLink || '';
   document.getElementById('yourName').value = data.yourName || '';
   students = data.students || [];
