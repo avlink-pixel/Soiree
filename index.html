@@ -25,7 +25,7 @@
   input, select { padding: 0.5rem 0.75rem; border: 0.5px solid #d3d1c7; border-radius: 4px; font-size: 0.9rem; font-family: Georgia, serif; background: white; color: #2c2c2a; width: 100%; }
   input:focus, select:focus { outline: none; border-color: #888780; }
 
-  .student-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr 2fr; gap: 0.5rem; align-items: center; padding: 0.6rem 0; border-bottom: 0.5px solid #f1efe8; }
+  .student-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr 0.5fr; gap: 0.5rem; align-items: center; padding: 0.6rem 0; border-bottom: 0.5px solid #f1efe8; }
   .student-row.header { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #888780; padding-bottom: 0.5rem; }
   .student-row input { font-size: 0.85rem; padding: 0.4rem 0.6rem; }
   .student-row .del-btn { background: none; border: none; color: #d3d1c7; cursor: pointer; font-size: 1.1rem; padding: 0.2rem 0.5rem; border-radius: 4px; }
@@ -129,16 +129,30 @@
 
   <div class="section">
     <div class="section-title">Students performing</div>
+
+    <div style="margin-bottom:1rem;">
+      <button class="add-btn" onclick="toggleImport()" id="importToggleBtn">+ Import from spreadsheet</button>
+      <div id="importArea" style="display:none;margin-top:1rem;">
+        <p style="font-size:0.8rem;color:#5f5e5a;margin-bottom:0.5rem;line-height:1.6;">Paste your data into the chat and I'll format it for you. Then paste the result below and click Import. Expected columns: <strong>Student Name | Class | Instrument | Piece | Parent Name | Teacher Name</strong> (pipe-separated, one student per line).</p>
+        <textarea id="importText" rows="6" style="width:100%;padding:0.75rem;border:0.5px solid #d3d1c7;border-radius:4px;font-size:0.85rem;font-family:Georgia,serif;color:#2c2c2a;background:white;resize:vertical;" placeholder="Matthew Bennett | 2SS | Piano | Moonlight Sonata | Katie Bennett | Kelli Smith&#10;Alessandro De Vecchi | 3KA | Piano | Für Elise | Marco De Vecchi | Kelli Smith"></textarea>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem;align-items:center;">
+          <button class="add-btn" onclick="importStudents()" style="margin-top:0;">Import students</button>
+          <button class="add-btn" onclick="clearImport()" style="margin-top:0;color:#e24b4a;border-color:#e24b4a;">Clear list and re-import</button>
+        </div>
+      </div>
+    </div>
+
     <div class="student-row header">
       <span>Student name</span>
       <span>Class</span>
       <span>Instrument</span>
       <span>Piece</span>
-      <span>Parent name &amp; teacher</span>
+      <span>Parent name</span>
+      <span>Teacher</span>
       <span></span>
     </div>
     <div id="studentList"></div>
-    <button class="add-btn" onclick="addStudent()">+ Add student</button>
+    <button class="add-btn" onclick="addStudent()">+ Add student manually</button>
   </div>
 
   <div class="section" id="checklistSection">
@@ -210,17 +224,54 @@ function renderStudents() {
   const list = document.getElementById('studentList');
   list.innerHTML = students.map((s, i) => `
     <div class="student-row">
-      <input value="${s.name}" placeholder="Student name" oninput="students[${i}].name=this.value;updateAll()">
-      <input value="${s.cls}" placeholder="Class" oninput="students[${i}].cls=this.value;updateAll()">
-      <input value="${s.instrument}" placeholder="Instrument" oninput="students[${i}].instrument=this.value;updateAll()">
-      <input value="${s.piece}" placeholder="Piece" oninput="students[${i}].piece=this.value;updateAll()">
-      <input value="${s.parent}" placeholder="Parent | Teacher" oninput="students[${i}].parent=this.value;updateAll()" title="Format: Parent Name | Teacher Name">
+      <input value="${s.name || ''}" placeholder="Student name" oninput="students[${i}].name=this.value;updateAll()">
+      <input value="${s.cls || ''}" placeholder="Class" oninput="students[${i}].cls=this.value;updateAll()">
+      <input value="${s.instrument || ''}" placeholder="Instrument" oninput="students[${i}].instrument=this.value;updateAll()">
+      <input value="${s.piece || ''}" placeholder="Piece" oninput="students[${i}].piece=this.value;updateAll()">
+      <input value="${s.parent || ''}" placeholder="Parent name" oninput="students[${i}].parent=this.value;updateAll()">
+      <input value="${s.teacher || ''}" placeholder="Teacher" oninput="students[${i}].teacher=this.value;updateAll()">
       <button class="del-btn" onclick="removeStudent(${i})">×</button>
     </div>
   `).join('');
 }
 
-function ph(val, label) {
+function toggleImport() {
+  const area = document.getElementById('importArea');
+  const btn = document.getElementById('importToggleBtn');
+  const visible = area.style.display !== 'none';
+  area.style.display = visible ? 'none' : 'block';
+  btn.textContent = visible ? '+ Import from spreadsheet' : '− Hide import';
+}
+
+function importStudents() {
+  const text = document.getElementById('importText').value.trim();
+  if (!text) return;
+  const lines = text.split('\n').filter(l => l.trim());
+  const newStudents = lines.map(line => {
+    const parts = line.split('|').map(p => p.trim());
+    return {
+      name: parts[0] || '',
+      cls: parts[1] || '',
+      instrument: parts[2] || '',
+      piece: parts[3] || '',
+      parent: parts[4] || '',
+      teacher: parts[5] || ''
+    };
+  });
+  students = [...students, ...newStudents];
+  document.getElementById('importText').value = '';
+  renderStudents();
+  updateAll();
+}
+
+function clearImport() {
+  if (confirm('This will remove all current students and let you re-import. Are you sure?')) {
+    students = [];
+    document.getElementById('importText').value = '';
+    renderStudents();
+    updateAll();
+  }
+}
   return val && val.trim() ? val.trim() : `[${label}]`;
 }
 
@@ -324,8 +375,7 @@ ${sign}`;
       const sName = s.name || '[Student Name]';
       const pName = s.parent || '[Parent Name]';
       const instr = s.instrument || '[Instrument]';
-      const teacher = s.teacher || '[Teacher Name]';
-      const body =
+      const teacher = s.teacher || '[Teacher Name]';      const body =
 `Subject: Soirée Concert Sign-Up: Due ${due}
 
 Dear ${pName},
