@@ -660,7 +660,22 @@ function loadFromFile(event) {
   reader.onload = (e) => {
     try {
       const data = JSON.parse(e.target.result);
+
+      // Migration: if perfDate is a text string rather than YYYY-MM-DD, clear it
+      if (data.perfDate && !/^\d{4}-\d{2}-\d{2}$/.test(data.perfDate)) {
+        data.perfDate = '';
+      }
+
+      // Migration: remove old dueDate field if present (now auto-calculated)
+      delete data.dueDate;
+
       applyFormData(data);
+
+      const msg = document.getElementById('autosave-msg');
+      msg.style.color = '#3b6d11';
+      msg.innerText = 'File loaded successfully';
+      setTimeout(() => { msg.innerText = ''; msg.style.color = '#888780'; }, 3000);
+
     } catch(err) {
       alert('Could not read file. Please make sure it is a valid Soirée save file.');
     }
