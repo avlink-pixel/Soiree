@@ -61,6 +61,16 @@
   .emails-section .tabs { padding: 0 1.5rem; background: #f1efe8; }
   .email-content { padding: 1.5rem; }
 
+  .checklist-week { margin-bottom: 1.25rem; }
+  .checklist-week-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: #888780; margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 0.5px solid #f1efe8; }
+  .checklist-week-date { font-size: 0.75rem; color: #b4b2a9; margin-left: 0.5rem; text-transform: none; letter-spacing: 0; }
+  .checklist-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.45rem 0; }
+  .checklist-item input[type="checkbox"] { width: 15px; min-width: 15px; height: 15px; margin-top: 0.2rem; accent-color: #2c2c2a; cursor: pointer; border: 0.5px solid #d3d1c7; border-radius: 2px; }
+  .checklist-item label { font-size: 0.88rem; color: #2c2c2a; cursor: pointer; line-height: 1.5; }
+  .checklist-item.done label { color: #b4b2a9; text-decoration: line-through; }
+  .checklist-item .task-date { font-size: 0.75rem; color: #888780; display: block; margin-top: 0.1rem; }
+  .no-date-notice { font-size: 0.82rem; color: #b4b2a9; font-style: italic; padding: 0.5rem 0; }
+
   @media (max-width: 600px) {
     .field-grid, .field-grid.three { grid-template-columns: 1fr; }
     .student-row { grid-template-columns: 1fr 1fr; }
@@ -129,6 +139,11 @@
     </div>
     <div id="studentList"></div>
     <button class="add-btn" onclick="addStudent()">+ Add student</button>
+  </div>
+
+  <div class="section" id="checklistSection">
+    <div class="section-title">My preparation checklist</div>
+    <div id="checklistContent"><p class="no-date-notice">Enter a performance date above to see your preparation checklist with exact dates.</p></div>
   </div>
 
   <div class="emails-section">
@@ -411,6 +426,116 @@ ${studentTable5}
 I am sure the students would love to have your support.
 
 ${sign}`;
+  // Checklist
+  renderChecklist(perfDateVal);
+}
+
+let checklistState = {};
+
+function getWeekStart(dateObj, weeksBack) {
+  const d = new Date(dateObj);
+  d.setDate(d.getDate() - weeksBack * 7);
+  const day = d.getDay();
+  const daysToMon = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + daysToMon);
+  return d;
+}
+
+function getSpecificDay(weekStart, dayOffset) {
+  const d = new Date(weekStart);
+  d.setDate(d.getDate() + dayOffset);
+  return d;
+}
+
+function renderChecklist(perfDateVal) {
+  const container = document.getElementById('checklistContent');
+  if (!perfDateVal) {
+    container.innerHTML = '<p class="no-date-notice">Enter a performance date above to see your preparation checklist with exact dates.</p>';
+    return;
+  }
+
+  const perf = new Date(perfDateVal + 'T12:00:00');
+
+  const weeks = [
+    {
+      weeksBack: 5,
+      tasks: [
+        { id: 'w5t1', text: 'Update all five email templates ready to send', day: null },
+        { id: 'w5t2', text: 'Create Google Forms by duplicating the last Soirée\'s form and updating the dates', day: null },
+      ]
+    },
+    {
+      weeksBack: 4,
+      tasks: [
+        { id: 'w4t1', text: 'Send Email 1 to Instrumental Teachers – Upcoming Soirée Information', day: 1 },
+      ]
+    },
+    {
+      weeksBack: 3,
+      tasks: [
+        { id: 'w3t1', text: 'Contact music teachers of the two student music leaders to find out if their students are able to perform', day: null },
+        { id: 'w3t2', text: 'All instrumental teachers to have replied with student names and pieces by end of this week', day: 4 },
+      ]
+    },
+    {
+      weeksBack: 2,
+      tasks: [
+        { id: 'w2t1', text: 'Send Email 2 to Parents – Invitation to Perform (personalised — update each email with child\'s name, teacher\'s name, and instrument)', day: 1 },
+      ]
+    },
+    {
+      weeksBack: 1,
+      tasks: [
+        { id: 'w1t1', text: 'All Google Forms due back from families confirming participation by 11:59pm', day: 0 },
+        { id: 'w1t2', text: 'Send Email 3 to Parents – Confirmation', day: 1 },
+        { id: 'w1t3', text: 'Write up MC notes', day: 1 },
+        { id: 'w1t4', text: 'Send MC notes home with the student MC', day: 3 },
+        { id: 'w1t5', text: 'Send Email 4 to Instrumental Teachers – Are You Attending the Soirée?', day: 3 },
+        { id: 'w1t6', text: 'Send Email 5 to All Staff – Invitation to Soirée', day: 4 },
+      ]
+    },
+    {
+      weeksBack: 0,
+      tasks: [
+        { id: 'wpt1', text: 'Soirée performance takes place', day: perf.getDay() === 0 ? 6 : perf.getDay() - 1 },
+      ]
+    }
+  ];
+
+  const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const perfWeekNum = parseInt(document.getElementById('perfWeek').value);
+
+  container.innerHTML = weeks.map(week => {
+    const weekStart = getWeekStart(perf, week.weeksBack);
+    const weekNum = (!isNaN(perfWeekNum)) ? perfWeekNum - week.weeksBack : null;
+    const weekLabel = weekNum !== null ? `Week ${weekNum}` : `${week.weeksBack === 0 ? 'Week of Performance' : week.weeksBack + ' Weeks Prior'}`;
+
+    const taskHTML = week.tasks.map(task => {
+      const checked = checklistState[task.id] ? 'checked' : '';
+      const doneClass = checklistState[task.id] ? 'done' : '';
+      let dateLabel = '';
+      if (task.day !== null) {
+        const taskDate = getSpecificDay(weekStart, task.day);
+        dateLabel = `<span class="task-date">${dayNames[task.day]} ${ordinal(taskDate.getDate())} ${['January','February','March','April','May','June','July','August','September','October','November','December'][taskDate.getMonth()]}</span>`;
+      }
+      return `<div class="checklist-item ${doneClass}" id="item-${task.id}">
+        <input type="checkbox" id="chk-${task.id}" ${checked} onchange="toggleTask('${task.id}', this.checked)">
+        <label for="chk-${task.id}">${task.text}${dateLabel}</label>
+      </div>`;
+    }).join('');
+
+    return `<div class="checklist-week">
+      <div class="checklist-week-title">${weekLabel}</div>
+      ${taskHTML}
+    </div>`;
+  }).join('');
+}
+
+function toggleTask(id, checked) {
+  checklistState[id] = checked;
+  const item = document.getElementById('item-' + id);
+  if (item) item.classList.toggle('done', checked);
+  autosave();
 }
 
 function showEmail(index) {
@@ -438,7 +563,8 @@ function getFormData() {
     perfDate: document.getElementById('perfDate').value,
     formsLink: document.getElementById('formsLink').value,
     yourName: document.getElementById('yourName').value,
-    students: students
+    students: students,
+    checklistState: checklistState
   };
 }
 
@@ -448,6 +574,7 @@ function applyFormData(data) {
   document.getElementById('formsLink').value = data.formsLink || '';
   document.getElementById('yourName').value = data.yourName || '';
   students = data.students || [];
+  checklistState = data.checklistState || {};
   renderStudents();
   updateAll();
 }
