@@ -188,7 +188,6 @@
       </div>
 
       <div class="email-panel" id="panel3">
-        <div class="incomplete-notice">⚠ This email is incomplete — additional information regarding pay to be added once confirmed by principal.</div>
         <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Instrumental teachers (attending)</div>
         <div class="email-box" id="email4"></div>
         <button class="copy-btn" onclick="copyEmail('email4', this)">Copy email</button>
@@ -307,6 +306,14 @@ function getMondayBefore(dateObj) {
   return monday;
 }
 
+function renderEmailHtml(text) {
+  const escaped = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return escaped.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#2c2c2a;text-decoration:underline;">$1</a>');
+}
+
 function updateAll() {
   autosave();
   const perfWeek = document.getElementById('perfWeek').value;
@@ -334,7 +341,7 @@ function updateAll() {
   const sign = yourName.trim() ? `Kind regards,\n${yourName.trim()}` : 'Kind regards,';
 
   // Email 1
-  document.getElementById('email1').innerText =
+  document.getElementById('email1').innerHTML = renderEmailHtml(
 `Subject: ${wPerf} Soirée – Timeline
 
 Hi everyone,
@@ -366,7 +373,7 @@ ${wPerf} | ${date} – Soirée performance.
 
 Please let me know if you have any questions.
 
-${sign}`;
+${sign}`);
 
   // Email 2 — one per student
   const email2Container = document.getElementById('email2');
@@ -405,13 +412,13 @@ ${sign}`;
           <span>${sName}${s.cls ? ' (' + s.cls + ')' : ''}</span>
           <button class="copy-btn" onclick="copyText(\`${body.replace(/`/g,'\\`')}\`, this)">Copy</button>
         </div>
-        <div class="student-email-body">${body}</div>
+        <div class="student-email-body">${renderEmailHtml(body)}</div>
       </div>`;
     }).join('');
   }
 
   // Email 3
-  document.getElementById('email3').innerText =
+  document.getElementById('email3').innerHTML = renderEmailHtml(
 `Subject: Soirée Concert – Confirmation
 
 Dear Parents,
@@ -420,7 +427,7 @@ This email is to confirm that we have received your response to the invitation f
 
 Thank you for responding, and we are very much looking forward to hearing the students perform.
 
-${sign}`;
+${sign}`);
 
   // Email 4
   let studentTable4 = '';
@@ -432,7 +439,7 @@ ${sign}`;
     studentTable4 = '  [Student Name]                  [Class]  [Instrument]         [Piece]';
   }
 
-  document.getElementById('email4').innerText =
+  document.getElementById('email4').innerHTML = renderEmailHtml(
 `Subject: Soirée Concert – Performing Students
 
 Hi everyone,
@@ -450,7 +457,20 @@ Could you please also:
   • Let me know if you will be able to attend
   • Send me any backing tracks that students require as soon as possible
 
-${sign}`;
+Regarding attendance and pay:
+
+Instrumental teachers are subject to a two-hour minimum payment for any day they attend the school. Please keep this in mind when completing your timesheet for a Soirée.
+
+  • If you have one or two students performing who may benefit from your support, or if you have multiple students performing, you are encouraged to attend.
+  • Please let Aaron know prior to the day of the Soirée if you are planning on attending.
+  • If the Soirée falls on a day you already work:
+      Add your Soirée hour to your existing timesheet for that day. You will already be well above the two-hour minimum.
+  • If the Soirée falls on a day you do not normally work:
+      You will receive one hour of pay for attending. On your fortnightly timesheet, include your Soirée hour and your administration time for the pay period on the Soirée day as follows:
+        - If your weekly administration time is one hour or more: claim one week of administration on your usual teaching day and one week on the Soirée day, combined with your Soirée hour. This reaches the two-hour minimum.
+        - If your weekly administration time is less than one hour: claim both weeks of administration time on the Soirée day, combined with your Soirée hour. This ensures you are paid the correct administration time for the full pay period and reaches the two-hour minimum without any rounding up.
+
+${sign}`);
 
   // Email 5
   let studentTable5 = '';
@@ -462,7 +482,7 @@ ${sign}`;
     studentTable5 = '  [Student Name]                  [Class]  [Instrument]';
   }
 
-  document.getElementById('email5').innerText =
+  document.getElementById('email5').innerHTML = renderEmailHtml(
 `Subject: Soirée Concert – Staff Invitation
 
 Hi everyone,
@@ -477,7 +497,7 @@ ${studentTable5}
 
 I am sure the students would love to have your support.
 
-${sign}`;
+${sign}`);
   // Checklist
   renderChecklist(perfDateVal);
 }
