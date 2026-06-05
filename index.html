@@ -382,6 +382,7 @@ ${sign}`);
   } else {
     email2Container.innerHTML = students.map((s, i) => {
       const sName = s.name || '[Student Name]';
+      const sFirst = s.name ? s.name.trim().split(' ')[0] : '[Student Name]';
       const pName = s.parent || '[Parent Name]';
       const instr = s.instrument || '[Instrument]';
       const teacher = s.teacher || '[Teacher Name]';      const body =
@@ -389,9 +390,9 @@ ${sign}`);
 
 Dear ${pName},
 
-${sName} has been recommended by their ${instr} teacher, ${teacher}, as ready to perform in our upcoming Soirée Concert, which will take place on ${date} at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
+${sFirst} has been recommended by their ${instr} teacher, ${teacher}, as ready to perform in our upcoming Soirée Concert, which will take place on ${date} at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
 
-If you would like ${sName} to take part, please complete the sign-up form linked below.
+If you would like ${sFirst} to take part, please complete the sign-up form linked below.
 
 Important information:
 
