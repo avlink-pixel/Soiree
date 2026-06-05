@@ -120,10 +120,6 @@
         <label>Google Forms link</label>
         <input type="text" id="formsLink" placeholder="https://forms.gle/..." oninput="updateAll()">
       </div>
-      <div class="field">
-        <label>Your name (sign-off)</label>
-        <input type="text" id="yourName" placeholder="e.g. Aaron" oninput="updateAll()">
-      </div>
     </div>
   </div>
 
@@ -319,7 +315,6 @@ function updateAll() {
   const perfWeek = document.getElementById('perfWeek').value;
   const perfDateVal = document.getElementById('perfDate').value;
   const formsLink = document.getElementById('formsLink').value;
-  const yourName = document.getElementById('yourName').value;
 
   let date = '[Day and Date]';
   let due = '[Due Date]';
@@ -338,7 +333,7 @@ function updateAll() {
   const wMinus2 = getWeekLabel(perfWeek, -2);
   const wMinus1 = getWeekLabel(perfWeek, -1);
   const link = formsLink.trim() || '[Google Forms Link]';
-  const sign = yourName.trim() ? `Kind regards,\n${yourName.trim()}` : 'Kind regards,';
+  const sign = 'Kind regards,';
 
   // Email 1
   document.getElementById('email1').innerHTML = renderEmailHtml(
@@ -635,7 +630,6 @@ function getFormData() {
     perfWeek: document.getElementById('perfWeek').value,
     perfDate: document.getElementById('perfDate').value,
     formsLink: document.getElementById('formsLink').value,
-    yourName: document.getElementById('yourName').value,
     students: students,
     checklistState: checklistState
   };
@@ -645,7 +639,6 @@ function applyFormData(data) {
   document.getElementById('perfWeek').value = data.perfWeek || '';
   document.getElementById('perfDate').value = data.perfDate || '';
   document.getElementById('formsLink').value = data.formsLink || '';
-  document.getElementById('yourName').value = data.yourName || '';
   students = data.students || [];
   checklistState = data.checklistState || {};
   renderStudents();
