@@ -173,8 +173,104 @@
       </div>
 
       <div class="email-panel" id="panel1">
-        <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Parents — one email per student</div>
-        <div class="student-emails" id="email2"></div>
+        <div style="display:flex;gap:0;border-bottom:0.5px solid #d3d1c7;margin-bottom:1.25rem;">
+          <button class="tab active" id="sub0" onclick="showSubTab(0)" style="font-size:0.7rem;padding:0.5rem 0.9rem;">Generated Emails</button>
+          <button class="tab" id="sub1" onclick="showSubTab(1)" style="font-size:0.7rem;padding:0.5rem 0.9rem;">Siblings: Same Teacher &amp; Instrument</button>
+          <button class="tab" id="sub2" onclick="showSubTab(2)" style="font-size:0.7rem;padding:0.5rem 0.9rem;">Siblings: Same Teacher, Diff. Instruments</button>
+          <button class="tab" id="sub3" onclick="showSubTab(3)" style="font-size:0.7rem;padding:0.5rem 0.9rem;">Siblings: Different Teachers</button>
+        </div>
+
+        <div id="subpanel0">
+          <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Parents — one email per student or family</div>
+          <div class="student-emails" id="email2"></div>
+        </div>
+
+        <div id="subpanel1" style="display:none;">
+          <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">Template — Siblings with same teacher and same instrument</div>
+          <div class="email-box" id="sibling-template-1">Subject: Soirée Concert Sign-Up: Due [Due Date]
+
+Dear [Parent Names],
+
+[Student 1] and [Student 2] have both been recommended by their [Instrument] teacher, [Teacher], as ready to perform in our upcoming Soirée Concert, which will take place on [Day and Date] at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
+
+If you would like [Student 1] and [Student 2] to take part, please complete the sign-up forms linked below.
+
+Important information:
+
+  • To sign up for this event, all forms must be submitted before 11:59pm on [Due Date].
+  • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
+  • Performers must stay for the full duration of the concert.
+  • Parents and family members are most welcome to attend and enjoy the performances.
+
+Please complete one form per student.
+
+Sign-up form for [Student 1]:
+[Google Forms Link]
+
+Sign-up form for [Student 2]:
+[Google Forms Link]
+
+Kind regards,</div>
+          <button class="copy-btn" onclick="copyEmail('sibling-template-1', this)">Copy template</button>
+        </div>
+
+        <div id="subpanel2" style="display:none;">
+          <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">Template — Siblings with same teacher but different instruments</div>
+          <div class="email-box" id="sibling-template-2">Subject: Soirée Concert Sign-Up: Due [Due Date]
+
+Dear [Parent Names],
+
+[Student 1] and [Student 2] have both been recommended by their teacher, [Teacher] — [Student 1] on [Instrument 1] and [Student 2] on [Instrument 2] — as ready to perform in our upcoming Soirée Concert, which will take place on [Day and Date] at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
+
+If you would like [Student 1] and [Student 2] to take part, please complete the sign-up forms linked below.
+
+Important information:
+
+  • To sign up for this event, all forms must be submitted before 11:59pm on [Due Date].
+  • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
+  • Performers must stay for the full duration of the concert.
+  • Parents and family members are most welcome to attend and enjoy the performances.
+
+Please complete one form per student.
+
+Sign-up form for [Student 1]:
+[Google Forms Link]
+
+Sign-up form for [Student 2]:
+[Google Forms Link]
+
+Kind regards,</div>
+          <button class="copy-btn" onclick="copyEmail('sibling-template-2', this)">Copy template</button>
+        </div>
+
+        <div id="subpanel3" style="display:none;">
+          <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">Template — Siblings with different teachers</div>
+          <div class="email-box" id="sibling-template-3">Subject: Soirée Concert Sign-Up: Due [Due Date]
+
+Dear [Parent Names],
+
+[Student 1] has been recommended by their [Instrument 1] teacher, [Teacher 1], and [Student 2] by their [Instrument 2] teacher, [Teacher 2], as ready to perform in our upcoming Soirée Concert, which will take place on [Day and Date] at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
+
+If you would like [Student 1] and [Student 2] to take part, please complete the sign-up forms linked below.
+
+Important information:
+
+  • To sign up for this event, all forms must be submitted before 11:59pm on [Due Date].
+  • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
+  • Performers must stay for the full duration of the concert.
+  • Parents and family members are most welcome to attend and enjoy the performances.
+
+Please complete one form per student.
+
+Sign-up form for [Student 1]:
+[Google Forms Link]
+
+Sign-up form for [Student 2]:
+[Google Forms Link]
+
+Kind regards,</div>
+          <button class="copy-btn" onclick="copyEmail('sibling-template-3', this)">Copy template</button>
+        </div>
       </div>
 
       <div class="email-panel" id="panel2">
@@ -370,17 +466,97 @@ Please let me know if you have any questions.
 
 ${sign}`);
 
-  // Email 2 — one per student
+  // Email 2 — one per student/family, with sibling detection
   const email2Container = document.getElementById('email2');
   if (students.length === 0) {
     email2Container.innerHTML = '<div style="color:#b4b2a9;font-style:italic;font-size:0.9rem;padding:1rem 0;">Add students above to generate individual parent emails.</div>';
   } else {
-    email2Container.innerHTML = students.map((s, i) => {
-      const sName = s.name || '[Student Name]';
-      const sFirst = s.name ? s.name.trim().split(' ')[0] : '[Student Name]';
-      const pName = s.parent || '[Parent Name]';
-      const instr = s.instrument || '[Instrument]';
-      const teacher = s.teacher || '[Teacher Name]';      const body =
+    // Group students by parent name to detect siblings
+    const familyMap = {};
+    students.forEach((s, i) => {
+      const key = (s.parent || '').trim().toLowerCase();
+      if (!familyMap[key]) familyMap[key] = [];
+      familyMap[key].push({ ...s, idx: i });
+    });
+
+    const processedIndices = new Set();
+    const emailBlocks = [];
+
+    students.forEach((s, i) => {
+      if (processedIndices.has(i)) return;
+      const key = (s.parent || '').trim().toLowerCase();
+      const family = familyMap[key] || [{ ...s, idx: i }];
+
+      if (family.length === 2) {
+        // Mark both as processed
+        family.forEach(f => processedIndices.add(f.idx));
+        const s1 = family[0], s2 = family[1];
+        const pName = s1.parent || '[Parent Name]';
+        const f1 = s1.name ? s1.name.trim().split(' ')[0] : '[Student 1]';
+        const f2 = s2.name ? s2.name.trim().split(' ')[0] : '[Student 2]';
+        const label = `${s1.name || '[Student 1]'} & ${s2.name || '[Student 2]'}`;
+
+        // Build recommendation sentence
+        let recSentence;
+        const sameTeacher = (s1.teacher || '').trim().toLowerCase() === (s2.teacher || '').trim().toLowerCase();
+        const sameInstrument = (s1.instrument || '').trim().toLowerCase() === (s2.instrument || '').trim().toLowerCase();
+        const t1 = s1.teacher || '[Teacher]';
+        const i1 = s1.instrument || '[Instrument]';
+        const i2 = s2.instrument || '[Instrument]';
+
+        if (sameTeacher && sameInstrument) {
+          recSentence = `${f1} and ${f2} have both been recommended by their ${i1} teacher, ${t1}, as ready to perform`;
+        } else if (sameTeacher && !sameInstrument) {
+          recSentence = `${f1} and ${f2} have both been recommended by their teacher, ${t1} — ${f1} on ${i1} and ${f2} on ${i2} — as ready to perform`;
+        } else {
+          const t2 = s2.teacher || '[Teacher]';
+          recSentence = `${f1} has been recommended by their ${i1} teacher, ${t1}, and ${f2} by their ${i2} teacher, ${t2}, as ready to perform`;
+        }
+
+        const body =
+`Subject: Soirée Concert Sign-Up: Due ${due}
+
+Dear ${pName},
+
+${recSentence} in our upcoming Soirée Concert, which will take place on ${date} at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
+
+If you would like ${f1} and ${f2} to take part, please complete the sign-up forms linked below.
+
+Important information:
+
+  • To sign up for this event, all forms must be submitted before 11:59pm on ${due}.
+  • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
+  • Performers must stay for the full duration of the concert.
+  • Parents and family members are most welcome to attend and enjoy the performances.
+
+Please complete one form per student.
+
+Sign-up form for ${f1}:
+${link}
+
+Sign-up form for ${f2}:
+${link}
+
+${sign}`;
+
+        emailBlocks.push(`<div class="student-email-block">
+          <div class="student-email-header">
+            <span>${label} ⭐ siblings</span>
+            <button class="copy-btn" onclick="copyText(\`${body.replace(/`/g,'\\`')}\`, this)">Copy</button>
+          </div>
+          <div class="student-email-body">${renderEmailHtml(body)}</div>
+        </div>`);
+
+      } else {
+        // Single student email
+        processedIndices.add(i);
+        const sName = s.name || '[Student Name]';
+        const sFirst = s.name ? s.name.trim().split(' ')[0] : '[Student Name]';
+        const pName = s.parent || '[Parent Name]';
+        const instr = s.instrument || '[Instrument]';
+        const teacher = s.teacher || '[Teacher Name]';
+
+        const body =
 `Subject: Soirée Concert Sign-Up: Due ${due}
 
 Dear ${pName},
@@ -403,14 +579,17 @@ ${link}
 
 ${sign}`;
 
-      return `<div class="student-email-block">
-        <div class="student-email-header">
-          <span>${sName}${s.cls ? ' (' + s.cls + ')' : ''}</span>
-          <button class="copy-btn" onclick="copyText(\`${body.replace(/`/g,'\\`')}\`, this)">Copy</button>
-        </div>
-        <div class="student-email-body">${renderEmailHtml(body)}</div>
-      </div>`;
-    }).join('');
+        emailBlocks.push(`<div class="student-email-block">
+          <div class="student-email-header">
+            <span>${sName}${s.cls ? ' (' + s.cls + ')' : ''}</span>
+            <button class="copy-btn" onclick="copyText(\`${body.replace(/`/g,'\\`')}\`, this)">Copy</button>
+          </div>
+          <div class="student-email-body">${renderEmailHtml(body)}</div>
+        </div>`);
+      }
+    });
+
+    email2Container.innerHTML = emailBlocks.join('');
   }
 
   // Email 3
@@ -604,6 +783,13 @@ function toggleTask(id, checked) {
   const item = document.getElementById('item-' + id);
   if (item) item.classList.toggle('done', checked);
   autosave();
+}
+
+function showSubTab(index) {
+  [0,1,2,3].forEach(i => {
+    document.getElementById('subpanel' + i).style.display = i === index ? 'block' : 'none';
+    document.getElementById('sub' + i).classList.toggle('active', i === index);
+  });
 }
 
 function showEmail(index) {
