@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,16 +8,16 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Georgia, 'Times New Roman', serif; background: #faf9f6; color: #2c2c2a; min-height: 100vh; }
-
+ 
   header { background: #2c2c2a; color: #faf9f6; padding: 1.5rem 2rem; }
   header h1 { font-size: 1.4rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; }
   header p { font-size: 0.85rem; color: #b4b2a9; margin-top: 0.25rem; letter-spacing: 0.04em; }
-
+ 
   .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
-
+ 
   .section { background: white; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
   .section-title { font-size: 0.7rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.12em; color: #888780; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid #d3d1c7; }
-
+ 
   .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .field-grid.three { grid-template-columns: 1fr 1fr 1fr; }
   .field { display: flex; flex-direction: column; gap: 0.35rem; }
@@ -24,43 +25,43 @@
   label { font-size: 0.75rem; color: #5f5e5a; letter-spacing: 0.05em; }
   input, select { padding: 0.5rem 0.75rem; border: 0.5px solid #d3d1c7; border-radius: 4px; font-size: 0.9rem; font-family: Georgia, serif; background: white; color: #2c2c2a; width: 100%; }
   input:focus, select:focus { outline: none; border-color: #888780; }
-
+ 
   .student-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr 0.5fr; gap: 0.5rem; align-items: center; padding: 0.6rem 0; border-bottom: 0.5px solid #f1efe8; }
   .student-row.header { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #888780; padding-bottom: 0.5rem; }
   .student-row input { font-size: 0.85rem; padding: 0.4rem 0.6rem; }
   .student-row .del-btn { background: none; border: none; color: #d3d1c7; cursor: pointer; font-size: 1.1rem; padding: 0.2rem 0.5rem; border-radius: 4px; }
   .student-row .del-btn:hover { color: #e24b4a; background: #fcebeb; }
-
+ 
   .add-btn { margin-top: 1rem; padding: 0.5rem 1rem; background: none; border: 0.5px solid #d3d1c7; border-radius: 4px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; color: #5f5e5a; cursor: pointer; font-family: Georgia, serif; }
   .add-btn:hover { background: #f1efe8; border-color: #888780; }
-
+ 
   .tabs { display: flex; gap: 0; border-bottom: 0.5px solid #d3d1c7; margin-bottom: 0; }
   .tab { padding: 0.6rem 1.1rem; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: #888780; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; border-top: none; border-left: none; border-right: none; font-family: Georgia, serif; }
   .tab.active { color: #2c2c2a; border-bottom: 2px solid #2c2c2a; }
   .tab:hover:not(.active) { color: #5f5e5a; }
-
+ 
   .email-panel { display: none; }
   .email-panel.active { display: block; }
-
+ 
   .email-box { background: #faf9f6; border: 0.5px solid #d3d1c7; border-radius: 6px; padding: 1.5rem; font-size: 0.9rem; line-height: 1.8; white-space: pre-wrap; font-family: Georgia, serif; color: #2c2c2a; min-height: 200px; position: relative; }
   .email-box .placeholder { color: #d3d1c7; font-style: italic; }
-
+ 
   .copy-btn { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.75rem; padding: 0.5rem 1rem; background: #2c2c2a; border: none; border-radius: 4px; color: #faf9f6; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; font-family: Georgia, serif; }
   .copy-btn:hover { background: #444441; }
   .copy-btn.copied { background: #3b6d11; }
-
+ 
   .student-emails { display: flex; flex-direction: column; gap: 1.5rem; }
   .student-email-block { border: 0.5px solid #d3d1c7; border-radius: 6px; overflow: hidden; }
   .student-email-header { background: #f1efe8; padding: 0.6rem 1rem; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: #5f5e5a; display: flex; justify-content: space-between; align-items: center; }
   .student-email-header .copy-btn { margin: 0; padding: 0.3rem 0.75rem; font-size: 0.7rem; }
   .student-email-body { padding: 1.25rem; font-size: 0.9rem; line-height: 1.8; white-space: pre-wrap; font-family: Georgia, serif; background: white; }
-
+ 
   .incomplete-notice { background: #faeeda; border: 0.5px solid #ef9f27; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.8rem; color: #633806; margin-bottom: 1rem; }
-
+ 
   .emails-section { background: white; border: 0.5px solid #d3d1c7; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; }
   .emails-section .tabs { padding: 0 1.5rem; background: #f1efe8; }
   .email-content { padding: 1.5rem; }
-
+ 
   .checklist-week { margin-bottom: 1.25rem; }
   .checklist-week-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: #888780; margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 0.5px solid #f1efe8; }
   .checklist-week-date { font-size: 0.75rem; color: #b4b2a9; margin-left: 0.5rem; text-transform: none; letter-spacing: 0; }
@@ -70,7 +71,7 @@
   .checklist-item.done label { color: #b4b2a9; text-decoration: line-through; }
   .checklist-item .task-date { font-size: 0.75rem; color: #888780; display: block; margin-top: 0.1rem; }
   .no-date-notice { font-size: 0.82rem; color: #b4b2a9; font-style: italic; padding: 0.5rem 0; }
-
+ 
   @media (max-width: 600px) {
     .field-grid, .field-grid.three { grid-template-columns: 1fr; }
     .student-row { grid-template-columns: 1fr 1fr; }
@@ -79,7 +80,7 @@
 </style>
 </head>
 <body>
-
+ 
 <header>
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
     <div>
@@ -96,9 +97,9 @@
     </div>
   </div>
 </header>
-
+ 
 <div class="container">
-
+ 
   <div class="section">
     <div class="section-title">Event details</div>
     <div class="field-grid three">
@@ -122,10 +123,10 @@
       </div>
     </div>
   </div>
-
+ 
   <div class="section">
     <div class="section-title">Students performing</div>
-
+ 
     <div style="margin-bottom:1rem;">
       <button class="add-btn" onclick="toggleImport()" id="importToggleBtn">+ Import from spreadsheet</button>
       <div id="importArea" style="display:none;margin-top:1rem;">
@@ -137,7 +138,7 @@
         </div>
       </div>
     </div>
-
+ 
     <div class="student-row header">
       <span>Student name</span>
       <span>Class</span>
@@ -150,12 +151,12 @@
     <div id="studentList"></div>
     <button class="add-btn" onclick="addStudent()">+ Add student manually</button>
   </div>
-
+ 
   <div class="section" id="checklistSection">
     <div class="section-title">My preparation checklist</div>
     <div id="checklistContent"><p class="no-date-notice">Enter a performance date above to see your preparation checklist with exact dates.</p></div>
   </div>
-
+ 
   <div class="emails-section">
     <div class="tabs" id="emailTabs">
       <button class="tab active" onclick="showEmail(0)">Email 1 – To: Instrumental Teachers</button>
@@ -165,13 +166,13 @@
       <button class="tab" onclick="showEmail(4)">Email 5 – All Staff Invitation</button>
     </div>
     <div class="email-content">
-
+ 
       <div class="email-panel active" id="panel0">
         <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Instrumental teachers</div>
         <div class="email-box" id="email1"></div>
         <button class="copy-btn" onclick="copyEmail('email1', this)">Copy email</button>
       </div>
-
+ 
       <div class="email-panel" id="panel1">
         <div style="display:flex;gap:0;border-bottom:0.5px solid #d3d1c7;margin-bottom:1.25rem;">
           <button class="tab active" id="sub0" onclick="showSubTab(0)" style="font-size:0.7rem;padding:0.5rem 0.9rem;">Generated Emails</button>
@@ -179,129 +180,129 @@
           <button class="tab" id="sub2" onclick="showSubTab(2)" style="font-size:0.7rem;padding:0.5rem 0.9rem;">Siblings: Same Teacher, Diff. Instruments</button>
           <button class="tab" id="sub3" onclick="showSubTab(3)" style="font-size:0.7rem;padding:0.5rem 0.9rem;">Siblings: Different Teachers</button>
         </div>
-
+ 
         <div id="subpanel0">
           <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Parents — one email per student or family</div>
           <div class="student-emails" id="email2"></div>
         </div>
-
+ 
         <div id="subpanel1" style="display:none;">
           <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">Template — Siblings with same teacher and same instrument</div>
           <div class="email-box" id="sibling-template-1">Subject: Soirée Concert Sign-Up: Due [Due Date]
-
+ 
 Dear [Parent Names],
-
+ 
 [Student 1] and [Student 2] have both been recommended by their [Instrument] teacher, [Teacher], as ready to perform in our upcoming Soirée Concert, which will take place on [Day and Date] at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
-
+ 
 If you would like [Student 1] and [Student 2] to take part, please complete the sign-up forms linked below.
-
+ 
 Important information:
-
+ 
   • To sign up for this event, all forms must be submitted before 11:59pm on [Due Date].
   • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
   • Performers must stay for the full duration of the concert.
   • Parents and family members are most welcome to attend and enjoy the performances.
-
+ 
 Please complete one form per student using the link below.
-
+ 
 Sign-up form:
 [Google Forms Link]
-
+ 
 Kind regards,</div>
           <button class="copy-btn" onclick="copyEmail('sibling-template-1', this)">Copy template</button>
         </div>
-
+ 
         <div id="subpanel2" style="display:none;">
           <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">Template — Siblings with same teacher but different instruments</div>
           <div class="email-box" id="sibling-template-2">Subject: Soirée Concert Sign-Up: Due [Due Date]
-
+ 
 Dear [Parent Names],
-
+ 
 [Student 1] and [Student 2] have both been recommended by their teacher, [Teacher] — [Student 1] on [Instrument 1] and [Student 2] on [Instrument 2] — as ready to perform in our upcoming Soirée Concert, which will take place on [Day and Date] at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
-
+ 
 If you would like [Student 1] and [Student 2] to take part, please complete the sign-up forms linked below.
-
+ 
 Important information:
-
+ 
   • To sign up for this event, all forms must be submitted before 11:59pm on [Due Date].
   • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
   • Performers must stay for the full duration of the concert.
   • Parents and family members are most welcome to attend and enjoy the performances.
-
+ 
 Please complete one form per student using the link below.
-
+ 
 Sign-up form:
 [Google Forms Link]
-
+ 
 Kind regards,</div>
           <button class="copy-btn" onclick="copyEmail('sibling-template-2', this)">Copy template</button>
         </div>
-
+ 
         <div id="subpanel3" style="display:none;">
           <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">Template — Siblings with different teachers</div>
           <div class="email-box" id="sibling-template-3">Subject: Soirée Concert Sign-Up: Due [Due Date]
-
+ 
 Dear [Parent Names],
-
+ 
 [Student 1] has been recommended by their [Instrument 1] teacher, [Teacher 1], and [Student 2] by their [Instrument 2] teacher, [Teacher 2], as ready to perform in our upcoming Soirée Concert, which will take place on [Day and Date] at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
-
+ 
 If you would like [Student 1] and [Student 2] to take part, please complete the sign-up forms linked below.
-
+ 
 Important information:
-
+ 
   • To sign up for this event, all forms must be submitted before 11:59pm on [Due Date].
   • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
   • Performers must stay for the full duration of the concert.
   • Parents and family members are most welcome to attend and enjoy the performances.
-
+ 
 Please complete one form per student using the link below.
-
+ 
 Sign-up form:
 [Google Forms Link]
-
+ 
 Kind regards,</div>
           <button class="copy-btn" onclick="copyEmail('sibling-template-3', this)">Copy template</button>
         </div>
       </div>
-
+ 
       <div class="email-panel" id="panel2">
         <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Parents (confirmed)</div>
         <div class="email-box" id="email3"></div>
         <button class="copy-btn" onclick="copyEmail('email3', this)">Copy email</button>
       </div>
-
+ 
       <div class="email-panel" id="panel3">
         <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: Instrumental teachers (attending)</div>
         <div class="email-box" id="email4"></div>
         <button class="copy-btn" onclick="copyEmail('email4', this)">Copy email</button>
       </div>
-
+ 
       <div class="email-panel" id="panel4">
         <div style="font-size:0.75rem;color:#888780;margin-bottom:0.75rem;letter-spacing:0.05em;text-transform:uppercase;">To: All staff</div>
         <div class="email-box" id="email5"></div>
         <button class="copy-btn" onclick="copyEmail('email5', this)">Copy email</button>
       </div>
-
+ 
     </div>
   </div>
-
+ 
 </div>
-
+ 
 <script>
 let students = [];
-
+ 
 function addStudent() {
   students.push({ name: '', cls: '', instrument: '', piece: '', parent: '', teacher: '' });
   renderStudents();
   updateAll();
 }
-
+ 
 function removeStudent(i) {
   students.splice(i, 1);
   renderStudents();
   updateAll();
 }
-
+ 
 function renderStudents() {
   const list = document.getElementById('studentList');
   list.innerHTML = students.map((s, i) => `
@@ -316,7 +317,7 @@ function renderStudents() {
     </div>
   `).join('');
 }
-
+ 
 function toggleImport() {
   const area = document.getElementById('importArea');
   const btn = document.getElementById('importToggleBtn');
@@ -324,7 +325,7 @@ function toggleImport() {
   area.style.display = visible ? 'none' : 'block';
   btn.textContent = visible ? '+ Import from spreadsheet' : '− Hide import';
 }
-
+ 
 function importStudents() {
   const text = document.getElementById('importText').value.trim();
   if (!text) return;
@@ -345,7 +346,7 @@ function importStudents() {
   renderStudents();
   updateAll();
 }
-
+ 
 function clearImport() {
   if (confirm('This will remove all current students and let you re-import. Are you sure?')) {
     students = [];
@@ -354,28 +355,28 @@ function clearImport() {
     updateAll();
   }
 }
-
+ 
 function ph(val, label) {
   return val && val.trim() ? val.trim() : `[${label}]`;
 }
-
+ 
 function getWeekLabel(base, offset) {
   if (!base || isNaN(parseInt(base))) return offset === 0 ? '[Performance Week]' : `[Performance Week ${offset > 0 ? '+' : ''}${offset}]`;
   const w = parseInt(base) + offset;
   return `Week ${w}`;
 }
-
+ 
 function ordinal(n) {
   const s = ['th','st','nd','rd'], v = n % 100;
   return n + (s[(v-20)%10] || s[v] || s[0]);
 }
-
+ 
 function formatDate(dateObj) {
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   return `${days[dateObj.getDay()]} ${ordinal(dateObj.getDate())} ${months[dateObj.getMonth()]}`;
 }
-
+ 
 function getMondayBefore(dateObj) {
   const d = new Date(dateObj);
   const day = d.getDay();
@@ -388,7 +389,7 @@ function getMondayBefore(dateObj) {
   monday.setDate(monday.getDate() + daysToMonday);
   return monday;
 }
-
+ 
 function renderEmailHtml(text) {
   const escaped = text
     .replace(/&/g, '&amp;')
@@ -396,16 +397,16 @@ function renderEmailHtml(text) {
     .replace(/>/g, '&gt;');
   return escaped.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#2c2c2a;text-decoration:underline;">$1</a>');
 }
-
+ 
 function updateAll() {
   autosave();
   const perfWeek = document.getElementById('perfWeek').value;
   const perfDateVal = document.getElementById('perfDate').value;
   const formsLink = document.getElementById('formsLink').value;
-
+ 
   let date = '[Day and Date]';
   let due = '[Due Date]';
-
+ 
   if (perfDateVal) {
     const perfDateObj = new Date(perfDateVal + 'T12:00:00');
     date = formatDate(perfDateObj);
@@ -421,42 +422,42 @@ function updateAll() {
   const wMinus1 = getWeekLabel(perfWeek, -1);
   const link = formsLink.trim() || '[Google Forms Link]';
   const sign = 'Kind regards,';
-
+ 
   // Email 1
   document.getElementById('email1').innerHTML = renderEmailHtml(
 `Subject: ${wPerf} Soirée – Timeline
-
+ 
 Hi everyone,
-
+ 
 We have an upcoming Soirée in ${wPerf} on ${date}. We are aiming to have at least 8 students perform, and ideally no more than 18 students in total.
-
+ 
 This Soirée is intended for students who are learning solo repertoire. As a result, it will be more focused on students learning piano and voice rather than students playing a concert band instrument who are currently working on ensemble repertoire.
-
+ 
 If you have band students who are also preparing a solo piece and you believe they will be able to perform it confidently by ${wPerf}, you are very welcome to include them.
-
+ 
 For all students invited to perform, we want this to be a positive experience. If a student is not yet confident with their current solo piece, please keep this in mind. We want to avoid students having a negative performance experience, as this can impact their confidence for future events.
-
+ 
 A note for Kelli and Rory: MCing our Soirées is part of the role of our student music leaders. Emily MC'd our first Soirée, so we would love to give Rory the opportunity this time if possible, though this may depend on where both students are at with their repertoire. We also feel it is only fair that whoever MCs has the chance to perform, so please let us know in your ${wMinus3} response whether either student has a solo piece ready.
-
+ 
 Please see the timeline below in preparation for the Soirée.
-
+ 
 ${wMinus3} | Your action: Please reply all to this email by the end of this week with your recommendations, including:
     • The student's name
     • The piece they will be performing
     • Their instrument
-
+ 
     Replying all will allow all teachers to see which students are being recommended and keep track of overall numbers.
-
+ 
 ${wMinus2} | Aaron: An invitation will be sent to the families of the recommended students with a sign up link to confirm participation.
-
+ 
 ${wMinus1} | Aaron: Final confirmed list of students performing will be completed.
-
+ 
 ${wPerf} | ${date} – Soirée performance.
-
+ 
 Please let me know if you have any questions.
-
+ 
 ${sign}`);
-
+ 
   // Email 2 — one per student/family, with sibling detection
   const email2Container = document.getElementById('email2');
   if (students.length === 0) {
@@ -469,15 +470,15 @@ ${sign}`);
       if (!familyMap[key]) familyMap[key] = [];
       familyMap[key].push({ ...s, idx: i });
     });
-
+ 
     const processedIndices = new Set();
     const emailBlocks = [];
-
+ 
     students.forEach((s, i) => {
       if (processedIndices.has(i)) return;
       const key = (s.parent || '').trim().toLowerCase();
       const family = familyMap[key] || [{ ...s, idx: i }];
-
+ 
       if (family.length === 2) {
         // Mark both as processed
         family.forEach(f => processedIndices.add(f.idx));
@@ -486,7 +487,7 @@ ${sign}`);
         const f1 = s1.name ? s1.name.trim().split(' ')[0] : '[Student 1]';
         const f2 = s2.name ? s2.name.trim().split(' ')[0] : '[Student 2]';
         const label = `${s1.name || '[Student 1]'} & ${s2.name || '[Student 2]'}`;
-
+ 
         // Build recommendation sentence
         let recSentence;
         const sameTeacher = (s1.teacher || '').trim().toLowerCase() === (s2.teacher || '').trim().toLowerCase();
@@ -494,7 +495,7 @@ ${sign}`);
         const t1 = s1.teacher || '[Teacher]';
         const i1 = s1.instrument || '[Instrument]';
         const i2 = s2.instrument || '[Instrument]';
-
+ 
         if (sameTeacher && sameInstrument) {
           recSentence = `${f1} and ${f2} have both been recommended by their ${i1} teacher, ${t1}, as ready to perform`;
         } else if (sameTeacher && !sameInstrument) {
@@ -503,30 +504,30 @@ ${sign}`);
           const t2 = s2.teacher || '[Teacher]';
           recSentence = `${f1} has been recommended by their ${i1} teacher, ${t1}, and ${f2} by their ${i2} teacher, ${t2}, as ready to perform`;
         }
-
+ 
         const body =
 `Subject: Soirée Concert Sign-Up: Due ${due}
-
+ 
 Dear ${pName},
-
+ 
 ${recSentence} in our upcoming Soirée Concert, which will take place on ${date} at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
-
+ 
 If you would like ${f1} and ${f2} to take part, please complete the sign-up forms linked below.
-
+ 
 Important information:
-
+ 
   • To sign up for this event, all forms must be submitted before 11:59pm on ${due}.
   • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
   • Performers must stay for the full duration of the concert.
   • Parents and family members are most welcome to attend and enjoy the performances.
-
+ 
 Please complete one form per student using the link below.
-
+ 
 Sign-up form:
 ${link}
-
+ 
 ${sign}`;
-
+ 
         emailBlocks.push(`<div class="student-email-block">
           <div class="student-email-header">
             <span>${label} ⭐ siblings</span>
@@ -534,7 +535,7 @@ ${sign}`;
           </div>
           <div class="student-email-body">${renderEmailHtml(body)}</div>
         </div>`);
-
+ 
       } else {
         // Single student email
         processedIndices.add(i);
@@ -542,31 +543,35 @@ ${sign}`;
         const sFirst = s.name ? s.name.trim().split(' ')[0] : '[Student Name]';
         const pName = s.parent || '[Parent Name]';
         const instr = s.instrument || '[Instrument]';
-        const teacher = s.teacher || '[Teacher Name]';
-
+        const teacher = s.teacher ? s.teacher.trim() : '';
+ 
+        const openingSentence = teacher
+          ? `${sFirst} has been recommended by their ${instr} teacher, ${teacher}, as ready to perform in our upcoming Soirée Concert`
+          : `${sFirst} is welcome to join us to perform in our upcoming Soirée Concert`;
+ 
         const body =
 `Subject: Soirée Concert Sign-Up: Due ${due}
-
+ 
 Dear ${pName},
-
-${sFirst} has been recommended by their ${instr} teacher, ${teacher}, as ready to perform in our upcoming Soirée Concert, which will take place on ${date} at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
-
+ 
+${openingSentence}, which will take place on ${date} at Harmony Hall. The concert will begin at 3:45pm and finish at approximately 4:30pm.
+ 
 If you would like ${sFirst} to take part, please complete the sign-up form linked below.
-
+ 
 Important information:
-
+ 
   • To sign up for this event, all forms must be submitted before 11:59pm on ${due}.
   • Due to organising the places for students who have signed up, we are unable to accept additional students after the closing date.
   • Performers must stay for the full duration of the concert.
   • Parents and family members are most welcome to attend and enjoy the performances.
-
+ 
 Please complete one form per student.
-
+ 
 Sign-up form:
 ${link}
-
+ 
 ${sign}`;
-
+ 
         emailBlocks.push(`<div class="student-email-block">
           <div class="student-email-header">
             <span>${sName}${s.cls ? ' (' + s.cls + ')' : ''}</span>
@@ -576,22 +581,22 @@ ${sign}`;
         </div>`);
       }
     });
-
+ 
     email2Container.innerHTML = emailBlocks.join('');
   }
-
+ 
   // Email 3
   document.getElementById('email3').innerHTML = renderEmailHtml(
 `Subject: Soirée Concert – Confirmation
-
+ 
 Dear Parents,
-
+ 
 This email is to confirm that we have received your response to the invitation for your child/ren to perform at the upcoming Soirée on ${date} from 3:45pm to 4:30pm.
-
+ 
 Thank you for responding, and we are very much looking forward to hearing the students perform.
-
+ 
 ${sign}`);
-
+ 
   // Email 4
   let studentTable4 = '';
   if (students.length > 0) {
@@ -601,29 +606,29 @@ ${sign}`);
   } else {
     studentTable4 = '  [Student Name]                  [Class]  [Instrument]         [Piece]';
   }
-
+ 
   document.getElementById('email4').innerHTML = renderEmailHtml(
 `Subject: Soirée Concert – Performing Students
-
+ 
 Hi everyone,
-
+ 
 The following students will be performing at the Soirée on ${date}:
-
+ 
   Student                          Class    Instrument           Piece
   ─────────────────────────────────────────────────────────────────────
 ${studentTable4}
-
+ 
 If the piece listed above differs from what your student is currently preparing, or if a piece has not yet been noted for your student, please let me know as soon as possible.
-
+ 
 Could you please also:
-
+ 
   • Let me know if you will be able to attend
   • Send me any backing tracks that students require as soon as possible
-
+ 
 Regarding attendance and pay:
-
+ 
 Instrumental teachers are subject to a two-hour minimum payment for any day they attend the school. Please keep this in mind when completing your timesheet for a Soirée.
-
+ 
   • If you have one or two students performing who may benefit from your support, or if you have multiple students performing, you are encouraged to attend.
   • Please let Aaron know prior to the day of the Soirée if you are planning on attending.
   • If the Soirée falls on a day you already work:
@@ -632,9 +637,9 @@ Instrumental teachers are subject to a two-hour minimum payment for any day they
       You will receive one hour of pay for attending. On your fortnightly timesheet, include your Soirée hour and your administration time for the pay period on the Soirée day as follows:
         - If your weekly administration time is one hour or more: claim one week of administration on your usual teaching day and one week on the Soirée day, combined with your Soirée hour. This reaches the two-hour minimum.
         - If your weekly administration time is less than one hour: claim both weeks of administration time on the Soirée day, combined with your Soirée hour. This ensures you are paid the correct administration time for the full pay period and reaches the two-hour minimum without any rounding up.
-
+ 
 ${sign}`);
-
+ 
   // Email 5
   let studentTable5 = '';
   if (students.length > 0) {
@@ -644,29 +649,29 @@ ${sign}`);
   } else {
     studentTable5 = '  [Student Name]                  [Class]  [Instrument]';
   }
-
+ 
   document.getElementById('email5').innerHTML = renderEmailHtml(
 `Subject: Soirée Concert – Staff Invitation
-
+ 
 Hi everyone,
-
+ 
 We would like to invite you to attend the upcoming Soirée on ${date} from 3:45pm to 4:30pm. The event will provide an opportunity for several students to share the music they have been learning in their instrumental and voice lessons.
-
+ 
 The following students will be performing:
-
+ 
   Student                          Class    Instrument
   ──────────────────────────────────────────────────────
 ${studentTable5}
-
+ 
 I am sure the students would love to have your support.
-
+ 
 ${sign}`);
   // Checklist
   renderChecklist(perfDateVal);
 }
-
+ 
 let checklistState = {};
-
+ 
 function getWeekStart(dateObj, weeksBack) {
   const d = new Date(dateObj);
   d.setDate(d.getDate() - weeksBack * 7);
@@ -675,22 +680,22 @@ function getWeekStart(dateObj, weeksBack) {
   d.setDate(d.getDate() + daysToMon);
   return d;
 }
-
+ 
 function getSpecificDay(weekStart, dayOffset) {
   const d = new Date(weekStart);
   d.setDate(d.getDate() + dayOffset);
   return d;
 }
-
+ 
 function renderChecklist(perfDateVal) {
   const container = document.getElementById('checklistContent');
   if (!perfDateVal) {
     container.innerHTML = '<p class="no-date-notice">Enter a performance date above to see your preparation checklist with exact dates.</p>';
     return;
   }
-
+ 
   const perf = new Date(perfDateVal + 'T12:00:00');
-
+ 
   const weeks = [
     {
       weeksBack: 5,
@@ -736,15 +741,15 @@ function renderChecklist(perfDateVal) {
       ]
     }
   ];
-
+ 
   const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
   const perfWeekNum = parseInt(document.getElementById('perfWeek').value);
-
+ 
   container.innerHTML = weeks.map(week => {
     const weekStart = getWeekStart(perf, week.weeksBack);
     const weekNum = (!isNaN(perfWeekNum)) ? perfWeekNum - week.weeksBack : null;
     const weekLabel = weekNum !== null ? `Week ${weekNum}` : `${week.weeksBack === 0 ? 'Week of Performance' : week.weeksBack + ' Weeks Prior'}`;
-
+ 
     const taskHTML = week.tasks.map(task => {
       const checked = checklistState[task.id] ? 'checked' : '';
       const doneClass = checklistState[task.id] ? 'done' : '';
@@ -758,38 +763,38 @@ function renderChecklist(perfDateVal) {
         <label for="chk-${task.id}">${task.text}${dateLabel}</label>
       </div>`;
     }).join('');
-
+ 
     return `<div class="checklist-week">
       <div class="checklist-week-title">${weekLabel}</div>
       ${taskHTML}
     </div>`;
   }).join('');
 }
-
+ 
 function toggleTask(id, checked) {
   checklistState[id] = checked;
   const item = document.getElementById('item-' + id);
   if (item) item.classList.toggle('done', checked);
   autosave();
 }
-
+ 
 function showSubTab(index) {
   [0,1,2,3].forEach(i => {
     document.getElementById('subpanel' + i).style.display = i === index ? 'block' : 'none';
     document.getElementById('sub' + i).classList.toggle('active', i === index);
   });
 }
-
+ 
 function showEmail(index) {
   document.querySelectorAll('.email-panel').forEach((p, i) => p.classList.toggle('active', i === index));
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
 }
-
+ 
 function copyEmail(id, btn) {
   const text = document.getElementById(id).innerText;
   copyText(text, btn);
 }
-
+ 
 function copyText(text, btn) {
   navigator.clipboard.writeText(text).then(() => {
     const orig = btn.innerText;
@@ -798,7 +803,7 @@ function copyText(text, btn) {
     setTimeout(() => { btn.innerText = orig; btn.classList.remove('copied'); }, 2000);
   });
 }
-
+ 
 function getFormData() {
   return {
     perfWeek: document.getElementById('perfWeek').value,
@@ -808,7 +813,7 @@ function getFormData() {
     checklistState: checklistState
   };
 }
-
+ 
 function applyFormData(data) {
   document.getElementById('perfWeek').value = data.perfWeek || '';
   document.getElementById('perfDate').value = data.perfDate || '';
@@ -818,7 +823,7 @@ function applyFormData(data) {
   renderStudents();
   updateAll();
 }
-
+ 
 let autosaveTimer;
 function autosave() {
   clearTimeout(autosaveTimer);
@@ -831,7 +836,7 @@ function autosave() {
     } catch(e) {}
   }, 800);
 }
-
+ 
 function saveToFile() {
   const data = getFormData();
   const perfWeek = data.perfWeek ? `week${data.perfWeek}` : 'soiree';
@@ -842,7 +847,7 @@ function saveToFile() {
   a.download = filename;
   a.click();
 }
-
+ 
 function loadFromFile(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -850,22 +855,22 @@ function loadFromFile(event) {
   reader.onload = (e) => {
     try {
       const data = JSON.parse(e.target.result);
-
+ 
       // Migration: if perfDate is a text string rather than YYYY-MM-DD, clear it
       if (data.perfDate && !/^\d{4}-\d{2}-\d{2}$/.test(data.perfDate)) {
         data.perfDate = '';
       }
-
+ 
       // Migration: remove old dueDate field if present (now auto-calculated)
       delete data.dueDate;
-
+ 
       applyFormData(data);
-
+ 
       const msg = document.getElementById('autosave-msg');
       msg.style.color = '#3b6d11';
       msg.innerText = 'File loaded successfully';
       setTimeout(() => { msg.innerText = ''; msg.style.color = '#888780'; }, 3000);
-
+ 
     } catch(err) {
       alert('Could not read file. Please make sure it is a valid Soirée save file.');
     }
@@ -873,11 +878,11 @@ function loadFromFile(event) {
   reader.readAsText(file);
   event.target.value = '';
 }
-
+ 
 document.querySelectorAll('input').forEach(el => {
   el.addEventListener('input', autosave);
 });
-
+ 
 // init — load from localStorage if available
 const saved = localStorage.getItem('soiree_data');
 if (saved) {
@@ -889,3 +894,4 @@ if (saved) {
 </script>
 </body>
 </html>
+ 
